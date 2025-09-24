@@ -20,8 +20,8 @@ public class LibraryService {
 
     public Library addBookToLibrary(Long id, String isbn, BookDTO bookDTO) {
         Library library = libraryRepository.findById(id).orElseThrow(RuntimeException::new);
-        library.addBook(isbn);
-        String bookServiceUrl = "http://localhost:8080/books/" + isbn + "/libraries/" + id + "/add";
+        library.addBook(bookDTO.getIsbn(), bookDTO.getTitle(), bookDTO.getAuthor());
+        String bookServiceUrl = "http://localhost:8082/books/" + isbn + "/libraries/" + id + "/add";
         restTemplate.put(bookServiceUrl, bookDTO);
         return libraryRepository.save(library);
     }
@@ -29,7 +29,7 @@ public class LibraryService {
     public Library removeBookFromLibrary(Long id, String isbn) {
         Library library = libraryRepository.findById(id).orElseThrow(RuntimeException::new);
         library.removeBook(isbn);
-        String bookServiceUrl = "http://localhost:8080/books/" + isbn + "/libraries/" + id + "/remove";
+        String bookServiceUrl = "http://localhost:8082/books/" + isbn + "/libraries/" + id + "/remove";
         restTemplate.put(bookServiceUrl, null);
         return libraryRepository.save(library);
     }
@@ -37,7 +37,7 @@ public class LibraryService {
     public Library borrowAtLibrary(Long id, String isbn) {
         Library library = libraryRepository.findById(id).orElseThrow(RuntimeException::new);
         library.removeBook(isbn);
-        String bookServiceUrl = "http://localhost:8080/books/borrow/" + isbn + "/" + id;
+        String bookServiceUrl = "http://localhost:8082/books/borrow/" + isbn + "/" + id;
         restTemplate.put(bookServiceUrl, null);
         return libraryRepository.save(library);
     }
@@ -45,7 +45,7 @@ public class LibraryService {
     public Library returnAtLibrary(Long id, String isbn) {
         Library library = libraryRepository.findById(id).orElseThrow(RuntimeException::new);
         library.addBook(isbn);
-        String bookServiceUrl = "http://localhost:8080/books/return/" + isbn + "/" + id;
+        String bookServiceUrl = "http://localhost:8082/books/return/" + isbn + "/" + id;
         restTemplate.put(bookServiceUrl, null);
         return libraryRepository.save(library);
     }

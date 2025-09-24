@@ -62,8 +62,13 @@ public class LibraryController {
     }
 
     @PutMapping("/libraries/{id}/addBook/{isbn}")
-    public Library addBookToLibrary(@PathVariable Long id, @PathVariable String isbn, @RequestBody BookDTO bookDTO) {
-        return libraryService.addBookToLibrary(id, isbn, bookDTO);
+    public ResponseEntity<Void> addBookToLibrary(@PathVariable Long id, @PathVariable String isbn, @RequestBody BookDTO bookDTO) {
+        try {
+            libraryService.addBookToLibrary(id, isbn, bookDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/libraries/{id}/removeBook/{isbn}")

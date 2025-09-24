@@ -66,6 +66,15 @@ public class Library {
                 '}';
     }
 
+    public void addBook(String isbn, String title, String author) {
+        Book book = new Book();
+        book.setIsbn(isbn);
+        book.setTitle(title);
+        book.setAuthor(author);
+        books.add(book);
+    }
+
+    // Keep the old addBook(String isbn) for backward compatibility if needed
     public void addBook(String isbn) {
         Book book = new Book();
         book.setIsbn(isbn);

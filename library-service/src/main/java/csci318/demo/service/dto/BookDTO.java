@@ -1,13 +1,16 @@
 package csci318.demo.service.dto;
 
-//a container that encapsulate book info to transfer data via different layers
 public class BookDTO {
-
-    private String title;
     private String isbn;
+    private String title;
     private String author;
 
-    public BookDTO() {
+    public BookDTO() {}
+
+    public BookDTO(String isbn, String title, String author) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
     }
 
     public String getIsbn() {
@@ -25,6 +28,7 @@ public class BookDTO {
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public String getAuthor() {
         return author;

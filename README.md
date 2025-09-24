@@ -22,43 +22,43 @@ The two services communicate synchronously via RestTemplate to ensure data consi
 
 ## Example Endpoints & Usage (curl examples)
 
-### Book Service
+### Book Service (port 8082)
 - Create a book:
-  ```cmd
-  curl -X POST -H "Content-Type: application/json" -d "{\"isbn\":\"1234567890\",\"title\":\"Spring Boot in Action\"}" http://localhost:8080/books
+  ```powershell
+  curl -X POST -H "Content-Type: application/json" -d '{"isbn":"1234567890","title":"Spring Boot in Action"}' http://localhost:8082/books
   ```
 - Query all books:
-  ```cmd
-  curl http://localhost:8080/books
+  ```powershell
+  curl http://localhost:8082/books
   ```
 - Borrow a book:
-  ```cmd
-  curl -X PUT http://localhost:8080/books/borrow/1234567890/1
+  ```powershell
+  curl -X PUT http://localhost:8082/books/borrow/1234567890/1
   ```
 - Return a book:
-  ```cmd
-  curl -X PUT http://localhost:8080/books/return/1234567890/1
+  ```powershell
+  curl -X PUT http://localhost:8082/books/return/1234567890/1
   ```
 - Add a book to a library (global create + sync):
-  ```cmd
-  curl -X PUT -H "Content-Type: application/json" -d "{\"isbn\":\"1234567890\",\"title\":\"Spring Boot in Action\"}" http://localhost:8080/books/1234567890/libraries/1/add
+  ```powershell
+  curl -X PUT -H "Content-Type: application/json" -d '{"isbn":"1234567890","title":"Spring Boot in Action"}' http://localhost:8082/books/1234567890/libraries/1/add
   ```
 
-### Library Service
+### Library Service (port 8081)
 - Create a library:
-  ```cmd
-  curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Central Library\"}" http://localhost:8081/libraries
+  ```powershell
+  curl -X POST -H "Content-Type: application/json" -d '{"name":"Central Library"}' http://localhost:8081/libraries
   ```
 - Add a book to a library (global create + sync):
-  ```cmd
-  curl -X PUT -H "Content-Type: application/json" -d "{\"isbn\":\"1234567890\",\"title\":\"Spring Boot in Action\"}" http://localhost:8081/libraries/1/addBook/1234567890
+  ```powershell
+  curl -X PUT -H "Content-Type: application/json" -d '{"isbn":"1234567890","title":"Spring Boot in Action"}' http://localhost:8081/libraries/1/addBook/1234567890
   ```
 - Borrow a book in a library:
-  ```cmd
+  ```powershell
   curl -X PUT http://localhost:8081/libraries/1/books/1234567890/borrow
   ```
 - Return a book in a library:
-  ```cmd
+  ```powershell
   curl -X PUT http://localhost:8081/libraries/1/books/1234567890/return
   ```
 
@@ -72,13 +72,34 @@ The two services communicate synchronously via RestTemplate to ensure data consi
 
 ## How to Run
 1. Enter the `book-service` and `library-service` directories separately and run:
-   ```cmd
+   ```powershell
    mvn spring-boot:run
    ```
    Or run the main class of each service in your IDE.
 2. Access the endpoints for testing.
 
+## How to Access H2 Database Console
+
+Both microservices use H2 in-memory database. You can access the H2 web console for debugging and inspection:
+
+- Open your browser and go to:
+  - Book Service: [http://localhost:8082/h2-console](http://localhost:8082/h2-console)
+  - Library Service: [http://localhost:8081/h2-console](http://localhost:8081/h2-console)
+
+- JDBC URL (default):
+  ```
+  jdbc:h2:mem:testdb
+  ```
+- User Name: `sa`
+- Password: (leave blank)
+
+If you cannot access the console, make sure your `application.properties` contains:
+```
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+```
+Add these properties to both services if missing.
+
 ## Notes
 - The model/Book.java and similar classes in both microservices are independent; do not cross-depend in pom.xml.
 - You must start each service separately; do not start all modules at once from the parent/root project.
-

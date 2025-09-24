@@ -130,4 +130,15 @@ public class BookService {
         restTemplate.put(url, null);
     }
 
+    public BookDTO createBook(BookDTO bookDTO) {
+        Book book = new Book();
+        book.setIsbn(bookDTO.getIsbn());
+        book.setTitle(bookDTO.getTitle());
+        // If Book has author or other fields, set them here
+        bookRepository.save(book);
+        BookDTO createdBookDTO = new BookDTO();
+        createdBookDTO.setIsbn(book.getIsbn());
+        createdBookDTO.setTitle(book.getTitle());
+        return createdBookDTO;
+    }
 }

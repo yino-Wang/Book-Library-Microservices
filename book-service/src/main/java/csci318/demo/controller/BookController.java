@@ -18,7 +18,6 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    //means when user access /book, it will call bookService.getAllBooks()
     @GetMapping("/books")
     List<BookDTO> allBooks() {
         return bookService.getAllBooks();
@@ -47,15 +46,41 @@ public class BookController {
     }
 
     @PutMapping("/books/{isbn}/libraries/{libraryId}/add")
-    public ResponseEntity<Void> addBookToLibrary(
+    public ResponseEntity<Void> addBookToLibraryPut(
             @PathVariable String isbn,
             @PathVariable Long libraryId,
             @RequestBody BookDTO bookDTO) {
-        return bookService.addBookToLibrary(libraryId, isbn, bookDTO);
+        System.out.println("PUT addBookToLibrary: " + bookDTO);
+        try {
+            return bookService.addBookToLibrary(libraryId, isbn, bookDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PostMapping("/books/{isbn}/libraries/{libraryId}/add")
+    public ResponseEntity<Void> addBookToLibraryPost(
+            @PathVariable String isbn,
+            @PathVariable Long libraryId,
+            @RequestBody BookDTO bookDTO) {
+        System.out.println("POST addBookToLibrary: " + bookDTO);
+        try {
+            return bookService.addBookToLibrary(libraryId, isbn, bookDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @PutMapping("/books/{isbn}/libraries/{libraryId}/remove")
     public void removeBookFromLibrary(@PathVariable String isbn, @PathVariable Long libraryId) {
         bookService.removeBookFromLibrary(isbn, libraryId);
+    }
+
+    @PostMapping("/books")
+    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
+        BookDTO createdBook = bookService.createBook(bookDTO);
+        return ResponseEntity.ok(createdBook);
     }
 }
